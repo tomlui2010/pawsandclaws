@@ -1,0 +1,149 @@
+version: 2
+commands:
+  destroy-environment:
+    description: Destroy cloudformation stacks given a workflow ID.
+    parameters:
+      stackname:
+        type: string
+    steps:
+      - run:
+          name: Delete backend and frontend stack on fail
+          when: on_fail
+          command: |
+            echo << parameters.stackname >>
+            aws cloudformation delete-stack --stack-name << parameters.stackname >> --debug
+jobs:
+  deploy-infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Install tar and gzip
+          command: |
+            yum update -y
+            yum install -y tar gzip
+            yum install -y jq
+      - run:
+          name: Create backend infrastructure
+          command: |
+             set +e
+             aws cloudformation deploy  \
+              --template-file .circleci/files/backend.yml  \
+              --stack-name "pppcalculator-backend-${CIRCLE_WORKFLOW_ID:0:7}"  \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
+              --tags project=pppcalculator
+             DEPLOY_EXIT_CODE=$?
+             if [ $DEPLOY_EXIT_CODE -ne 0 ]; then
+              aws cloudformation describe-stack-events --stack-name "pppcalculator-backend-${CIRCLE_WORKFLOW_ID:0:7}" >> /tmp/backend-output.txt
+              cat /tmp/backend-output.txt
+              exit 1
+             fi
+             set -e
+  # Wait for CloudFormation stack creation completion
+      - run:
+          name: Wait for EC2 instance creation
+          command: |
+            aws cloudformation wait stack-create-complete --stack-name "pppcalculator-backend-${CIRCLE_WORKFLOW_ID:0:7}"
+      - run:
+          name: Get instance public IP
+          command: |
+            INSTANCE_ID=$(aws cloudformation describe-stack-resources --stack-name "pppcalculator-backend-${CIRCLE_WORKFLOW_ID:0:7}" --query 'StackResources[?ResourceType==`AWS::EC2::Instance`].PhysicalResourceId' --output text --region $AWS_REGION)
+            INSTANCE_IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Reservations[0].Instances[0].PublicIpAddress' --output text --region $AWS_REGION)
+            INSTANCE_PUBLIC_DNS=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Reservations[0].Instances[0].PublicDnsName' --output text --region $AWS_REGION)
+            echo "Instance IP: $INSTANCE_IP"
+            echo "INSTANCE_IP=$INSTANCE_IP" >> $BASH_ENV
+            echo "INSTANCE_PUBLIC_DNS=$INSTANCE_PUBLIC_DNS" >> $BASH_ENV
+      - run:
+          name: Get EC2 instance public IP
+          command: |
+            echo "[BACKEND]" > /tmp/inventory.ini
+            echo "$INSTANCE_IP ansible_user=ubuntu" >> /tmp/inventory.ini
+            echo "$INSTANCE_IP" > /tmp/instance_ip.txt
+            echo "$INSTANCE_PUBLIC_DNS" > /tmp/instance_public_dns.txt
+            cat /tmp/inventory.ini
+      - persist_to_workspace:
+          root: /tmp
+          paths: 
+            - inventory.ini
+            - instance_ip.txt
+            - instance_public_dns.txt
+  build:
+    docker:
+      - image: cimg/python:3.10.2
+    steps:
+      - checkout
+      - setup_remote_docker
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Install pip packages
+          command: |
+            python3 -m venv ~/.venv
+            source ~/.venv/bin/activate
+            pip install -r backend/requirements.txt
+      - run:
+          name: Build and push backend app docker image to Docker Hub
+          command: |
+            docker build -f backend/Dockerfile -t tomlui2010/backend-$IMAGE_NAME:latest .
+            echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USER_ID" --password-stdin
+            docker push tomlui2010/backend-$IMAGE_NAME:latest
+      - run:
+          name: Update nginx.conf.j2 template
+          command: | 
+            pip install jinja2-cli
+            EC2_DOMAIN_NAME=$(cat /tmp/instance_public_dns.txt)
+            jinja2 --format=yaml frontend/nginx.conf.j2 \
+              -D domain_name=$EC2_DOMAIN_NAME \
+              > frontend/nginx.conf
+            cat frontend/nginx.conf
+      - run:
+          name: Build and push frontend app docker image to Docker Hub
+          command: |
+            docker build -f frontend/Dockerfile -t tomlui2010/frontend-$IMAGE_NAME:latest .
+            echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USER_ID" --password-stdin
+            docker push tomlui2010/frontend-$IMAGE_NAME:latest
+
+  configure_infrastructure:
+    docker:
+      - image: python:3.8-alpine3.20
+
+    steps:
+      - checkout
+      # Fingerprint of the keypair pem file 
+      - add_ssh_keys:
+          fingerprints: ["SHA256:oFBiZKJzzb55dqfLxh2PcBgLpJGm4kvpq88vgWTUZ1Q"]
+      - attach_workspace:
+          at: /tmp
+      - run: 
+          name: Install Ansible
+          command: |
+            apk add --update ansible openssh-client
+      - run:
+          name: Check Ansible Version
+          command: |
+            eval $(ssh-agent -s)
+            ansible --version
+      - run:
+          name: Run Playbook and Configure EC2 instance 
+          command: |
+            ansible-playbook --extra-vars "SECRET_FILE=${secrets} aws_access_key_id=${AWS_ACCESS_KEY_ID} aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}" -i /tmp/inventory.ini .circleci/ansible/playbook.yml
+
+workflows:
+  version: 2
+  backend:
+    jobs:
+      # - deploy-infrastructure:
+      #     context: 
+      #     - ppp
+      # - build:
+      #     requires:
+      #       - deploy-infrastructure
+      #     context:
+      #       - ppp
+      # - configure_infrastructure:
+      #     requires:
+      #       - deploy-infrastructure
+      #       - build
+      #     context: 
+      #       - ppp
