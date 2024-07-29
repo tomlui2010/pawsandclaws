@@ -1,24 +1,27 @@
-FROM python:3.9-slim-buster
+FROM node:18-alpine as build
 
-# Setup and activate virtual python environment 
-ENV VIRTUAL_ENV=/opt/.venv
-RUN python3 -m venv $VIRTUAL_ENV
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-
-# Working Directory
+# Set the working directory inside the container
 WORKDIR /app
+COPY frontend/public/ /app/public
+COPY frontend/src/ /app/src
 
-# Copy requirements.txt
-COPY backend/requirements.txt requirements.txt
+# Copy the package.json and package-lock.json files
+COPY frontend/package.json /app/
+COPY frontend/package-lock.json /app/
 
-# Install packages from requirements.txt
-# hadolint ignore=DL3013
-RUN pip install --upgrade pip &&\
-    pip install --trusted-host pypi.python.org --no-cache-dir -r requirements.txt
+# Install npm dependencies
+RUN npm install
+RUN npm run build
 
-# Copy source code to working directory
-COPY . backend/app.py /app/
+# Stage 2: Serve the React app with Nginx
+FROM nginx:stable-alpine
 
-EXPOSE 5000
-ENV FLASK_APP=app.py
-CMD ["flask", "run", "--host", "0.0.0.0"]
+COPY --from=build /app/build /usr/share/nginx/html
+
+# Copy custom Nginx configuration
+COPY frontend/nginx.conf /etc/nginx/nginx.conf
+
+EXPOSE 80
+
+# Start the React app
+CMD ["nginx", "-g", "daemon off;"]
