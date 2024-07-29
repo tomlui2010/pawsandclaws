@@ -9,7 +9,7 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 WORKDIR /app
 
 # Copy requirements.txt
-COPY backend/requirements.txt requirements.txt
+COPY requirements.txt requirements.txt
 
 # Install packages from requirements.txt
 # hadolint ignore=DL3013
@@ -17,7 +17,7 @@ RUN pip install --upgrade pip &&\
     pip install --trusted-host pypi.python.org --no-cache-dir -r requirements.txt
 
 # Copy source code to working directory
-COPY . backend/app.py /app/
+COPY . app.py /app/
 
 EXPOSE 5000
 ENV FLASK_APP=app.py
