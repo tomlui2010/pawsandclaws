@@ -78,7 +78,7 @@ jobs:
           at: /tmp
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "requirements.txt" }}
+            - v1-dependencies-{{ checksum "backend/requirements.txt" }}
             - v1-dependencies-
       - run:
           name: Install pip packages
@@ -118,7 +118,7 @@ jobs:
       - save_cache:
           paths: 
             - ~/.venv
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
+          key: v1-dependencies-{{ checksum "backend/requirements.txt" }}
 
   configure_infrastructure:
     docker:
