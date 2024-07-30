@@ -112,7 +112,7 @@ jobs:
       - checkout
       # Fingerprint of the keypair pem file 
       - add_ssh_keys:
-          fingerprints: ["SHA256:oFBiZKJzzb55dqfLxh2PcBgLpJGm4kvpq88vgWTUZ1Q"]
+          fingerprints: ["SHA256:kk2G5KMkPOr4gBt+xJvDBbPGkH1aQXhdzEziZFzDaGs"]
       - attach_workspace:
           at: /tmp
       - run: 
