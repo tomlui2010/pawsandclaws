@@ -52,7 +52,7 @@ Resources:
       InstanceType: t2.micro
       SecurityGroups:
         - Ref: InstanceSecurityGroup
-      KeyName: pawsandclawshost 
+      KeyName: pawsandclawskeypair 
       ImageId: ami-074be47313f84fa38
       Tags:
         - Key: Name
