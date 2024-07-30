@@ -53,7 +53,7 @@ Resources:
       SecurityGroups:
         - Ref: InstanceSecurityGroup
       KeyName: pawsandclawshost 
-      ImageId: ami-0cf2b4e024cdb6960
+      ImageId: ami-074be47313f84fa38
       Tags:
         - Key: Name
           Value: !Sub pawsandclaws-backend-${ID}
