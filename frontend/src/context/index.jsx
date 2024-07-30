@@ -17,7 +17,7 @@ export default function GlobalState({ children }) {
     event.preventDefault();
     try {
       const res = await fetch(
-        `http://localhost/pet/by_name?search=${searchParam}`
+        `/api/pet/by_name?search=${searchParam}`
       );
 
       if (res.ok) {

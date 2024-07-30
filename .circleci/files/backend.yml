@@ -10,7 +10,7 @@ Resources:
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupName: !Sub pppcalculator-${ID}
+      GroupName: !Sub pawsandclaws-${ID}
       GroupDescription: Allow port 22 and port 3030.
       SecurityGroupIngress:
         - IpProtocol: tcp
@@ -52,8 +52,8 @@ Resources:
       InstanceType: t2.micro
       SecurityGroups:
         - Ref: InstanceSecurityGroup
-      KeyName: pppcalculatorhost 
+      KeyName: pawsandclawshost 
       ImageId: ami-0cf2b4e024cdb6960
       Tags:
         - Key: Name
-          Value: !Sub pppcalculator-backend-${ID}
+          Value: !Sub pawsandclaws-backend-${ID}

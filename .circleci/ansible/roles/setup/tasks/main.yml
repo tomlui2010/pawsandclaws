@@ -50,24 +50,22 @@
 
 - name: Pull Docker image from Docker Hub
   docker_image:
-    name: tomlui2010/pppcalculator
+    name: tomlui2010/backend-pawsandclaws
     tag: latest
     source: pull
 
 - name: Run backend Docker container
   docker_container:
-    name: pppcalculator_backend
-    image: tomlui2010/backend-pppcalculator:latest
+    name: pawsandclaws_backend
+    image: tomlui2010/backend-pawsandclaws:latest
     state: started
     ports:
       - "5000:5000"
-    env:
-      SECRET_FILE: "{{SECRET_FILE}}"
 
 - name: Run frontend Docker container
   docker_container:
     name: pppcalculator_frontend
-    image: tomlui2010/frontend-pppcalculator:latest
+    image: tomlui2010/frontend-pawsandclaws:latest
     state: started
     ports:
       - "80:80"

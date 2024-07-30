@@ -14,7 +14,7 @@ export default function User() {
   useEffect(() => {
     async function getUserDetails() {
       const response = await fetch(
-        `http://localhost/pet/by_id?id=${id}`
+        `/api/pet/by_id?id=${id}`
       );
       const data = await response.json();
 

@@ -1,0 +1,46 @@
+events {
+    worker_connections  1024;  # Default maximum number of simultaneous connections
+}
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+server {
+    listen 80;
+    server_name localhost;
+
+    # Serve the React app
+    root /usr/share/nginx/html;
+    index index.html;
+
+    # Handle SPA routing
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Proxy API requests to the Flask backend
+    location /api/ {
+        proxy_pass http://{{domain_name}}:5000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # Serve uploaded files
+    location /uploads/ {
+        alias /uploads/; # This should match the mount point in Docker
+        autoindex on;
+    }
+
+    # Enable gzip compression for better performance
+    gzip on;
+    gzip_types text/plain application/javascript application/x-javascript text/javascript text/css image/svg+xml;
+    gzip_min_length 256;
+
+    # Logging
+    access_log /var/log/nginx/access.log;
+    error_log /var/log/nginx/error.log;
+}
+
+}

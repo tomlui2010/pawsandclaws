@@ -30,12 +30,12 @@ jobs:
              set +e
              aws cloudformation deploy  \
               --template-file .circleci/files/backend.yml  \
-              --stack-name "pppcalculator-backend-${CIRCLE_WORKFLOW_ID:0:7}"  \
+              --stack-name "pawsandclaws-backend-${CIRCLE_WORKFLOW_ID:0:7}"  \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
-              --tags project=pppcalculator
+              --tags project=pawsandclaws
              DEPLOY_EXIT_CODE=$?
              if [ $DEPLOY_EXIT_CODE -ne 0 ]; then
-              aws cloudformation describe-stack-events --stack-name "pppcalculator-backend-${CIRCLE_WORKFLOW_ID:0:7}" >> /tmp/backend-output.txt
+              aws cloudformation describe-stack-events --stack-name "pawsandclaws-backend-${CIRCLE_WORKFLOW_ID:0:7}" >> /tmp/backend-output.txt
               cat /tmp/backend-output.txt
               exit 1
              fi
@@ -44,11 +44,11 @@ jobs:
       - run:
           name: Wait for EC2 instance creation
           command: |
-            aws cloudformation wait stack-create-complete --stack-name "pppcalculator-backend-${CIRCLE_WORKFLOW_ID:0:7}"
+            aws cloudformation wait stack-create-complete --stack-name "pawsandclaws-backend-${CIRCLE_WORKFLOW_ID:0:7}"
       - run:
           name: Get instance public IP
           command: |
-            INSTANCE_ID=$(aws cloudformation describe-stack-resources --stack-name "pppcalculator-backend-${CIRCLE_WORKFLOW_ID:0:7}" --query 'StackResources[?ResourceType==`AWS::EC2::Instance`].PhysicalResourceId' --output text --region $AWS_REGION)
+            INSTANCE_ID=$(aws cloudformation describe-stack-resources --stack-name "pawsandclaws-backend-${CIRCLE_WORKFLOW_ID:0:7}" --query 'StackResources[?ResourceType==`AWS::EC2::Instance`].PhysicalResourceId' --output text --region $AWS_REGION)
             INSTANCE_IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Reservations[0].Instances[0].PublicIpAddress' --output text --region $AWS_REGION)
             INSTANCE_PUBLIC_DNS=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Reservations[0].Instances[0].PublicDnsName' --output text --region $AWS_REGION)
             echo "Instance IP: $INSTANCE_IP"
@@ -85,7 +85,7 @@ jobs:
       - run:
           name: Build and push backend app docker image to Docker Hub
           command: |
-            docker build -f backend/Dockerfile -t tomlui2010/backend-$IMAGE_NAME:latest .
+            docker build -f backend/Dockerfile.backend -t tomlui2010/backend-$IMAGE_NAME:latest .
             echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USER_ID" --password-stdin
             docker push tomlui2010/backend-$IMAGE_NAME:latest
       - run:
@@ -100,7 +100,7 @@ jobs:
       - run:
           name: Build and push frontend app docker image to Docker Hub
           command: |
-            docker build -f frontend/Dockerfile -t tomlui2010/frontend-$IMAGE_NAME:latest .
+            docker build -f frontend/Dockerfile.frontend -t tomlui2010/frontend-$IMAGE_NAME:latest .
             echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USER_ID" --password-stdin
             docker push tomlui2010/frontend-$IMAGE_NAME:latest
 
@@ -127,15 +127,15 @@ jobs:
       - run:
           name: Run Playbook and Configure EC2 instance 
           command: |
-            ansible-playbook --extra-vars "SECRET_FILE=${secrets} aws_access_key_id=${AWS_ACCESS_KEY_ID} aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}" -i /tmp/inventory.ini .circleci/ansible/playbook.yml
+            ansible-playbook --extra-vars "aws_access_key_id=${AWS_ACCESS_KEY_ID} aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}" -i /tmp/inventory.ini .circleci/ansible/playbook.yml
 
 workflows:
   version: 2
-  backend:
+  app:
     jobs:
-      # - deploy-infrastructure:
-      #     context: 
-      #     - ppp
+      - deploy-infrastructure:
+          context: 
+          - ppp
       # - build:
       #     requires:
       #       - deploy-infrastructure
