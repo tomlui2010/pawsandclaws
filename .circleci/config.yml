@@ -136,14 +136,14 @@ workflows:
       - deploy-infrastructure:
           context: 
           - ppp
-      # - build:
-      #     requires:
-      #       - deploy-infrastructure
-      #     context:
-      #       - ppp
-      # - configure_infrastructure:
-      #     requires:
-      #       - deploy-infrastructure
-      #       - build
-      #     context: 
-      #       - ppp
+      - build:
+          requires:
+            - deploy-infrastructure
+          context:
+            - ppp
+      - configure_infrastructure:
+          requires:
+            - deploy-infrastructure
+            - build
+          context: 
+            - ppp
