@@ -13,7 +13,7 @@ COPY backend/requirements.txt requirements.txt
 
 # Install packages from requirements.txt
 # hadolint ignore=DL3013
-RUN pip install --upgrade pip &&\
+RUN pip install --no-cache-dir --upgrade pip &&\
     pip install --trusted-host pypi.python.org --no-cache-dir -r requirements.txt
 
 # Copy source code to working directory
