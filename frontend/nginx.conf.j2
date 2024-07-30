@@ -29,7 +29,7 @@ server {
 
     # Serve uploaded files
     location /uploads/ {
-        alias /uploads/; # This should match the mount point in Docker
+        alias /app/uploads/; 
         autoindex on;
     }
 
