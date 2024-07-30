@@ -12,4 +12,4 @@ docker images | grep "pawsclaws"
 
 # Step 3: 
 # Run flask app
-docker run -d -p 80:5000 tomlui2010/pawsclaws-backend-app:latest
+docker run -d -p 5001:5000 tomlui2010/pawsclaws-backend-app:latest
