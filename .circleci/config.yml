@@ -83,8 +83,8 @@ jobs:
       - run:
           name: Install pip packages
           command: |
-            python3 -m venv /opt/.venv
-            source /opt/.venv/bin/activate
+            python3 -m venv ~/.venv
+            source ~/.venv/bin/activate
             pip install -r backend/requirements.txt
             wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 &&\
             chmod +x /bin/hadolint
@@ -92,7 +92,7 @@ jobs:
       - run:
           name: run lint
           command: |
-            source /opt/.venv/bin/activate
+            source ~/.venv/bin/activate
             make lint 
       - run:
           name: Build and push backend app docker image to Docker Hub
