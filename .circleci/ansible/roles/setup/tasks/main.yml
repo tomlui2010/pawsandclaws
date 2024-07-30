@@ -62,10 +62,10 @@
     ports:
       - "5000:5000"
 
-# - name: Run frontend Docker container
-#   docker_container:
-#     name: pppcalculator_frontend
-#     image: tomlui2010/frontend-pawsandclaws:latest
-#     state: started
-#     ports:
-#       - "80:80"
+- name: Run frontend Docker container
+  docker_container:
+    name: pppcalculator_frontend
+    image: tomlui2010/frontend-pawsandclaws:latest
+    state: started
+    ports:
+      - "80:80"
