@@ -9,7 +9,7 @@ export default function UserItem({ item }) {
   useEffect(() => {
     const fetchProfilePhoto = async () => {
       try {
-        const response = await axios.get(`http://localhost/uploads/${item?.profile_photo}`, {
+        const response = await axios.get(`/uploads/${item?.profile_photo}`, {
           responseType: 'blob',
         });
         const imageUrl = URL.createObjectURL(response.data);
@@ -26,7 +26,7 @@ export default function UserItem({ item }) {
   return (
     <div className="flex flex-col w-80 overflow-hidden p-5 bg-white/75 shadow-xl gap-5 border-2 rounded-2xl border-white">
       <div className="h-40 flex justify-center overflow-hidden items-center rounded-xl">
-        <img src={`http://localhost/uploads/${item?.profile_photo}`} alt="user" className="block w-full" />
+        <img src={`/uploads/${item?.profile_photo}`} alt="user" className="block w-full" />
       </div>
       <div>
         <h3 className="font-bold text-2xl truncate text-black">

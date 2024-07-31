@@ -14,7 +14,7 @@ export default function User() {
   useEffect(() => {
     async function getUserDetails() {
       const response = await fetch(
-        `/api/pet/by_id?id=${id}`
+        `/pet/by_id?id=${id}`
       );
       const data = await response.json();
 
@@ -34,7 +34,7 @@ export default function User() {
       <div className="row-start-2 lg:row-start-auto">
         <div className="h-96 overflow-hidden rounded-xl group">
           <img
-            src={`http://localhost/uploads/${userDetailsData?.pets[0]?.profile_photo}`}
+            src={`/uploads/${userDetailsData?.pets[0]?.profile_photo}`}
             className="w-full h-full object-cover block group-hover:scale-105 duration-300"
           />
         </div>

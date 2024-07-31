@@ -19,7 +19,7 @@ server {
     }
 
     # Proxy API requests to the Flask backend
-    location /api/ {
+    location / {
         proxy_pass http://{{domain_name}}:5000;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;

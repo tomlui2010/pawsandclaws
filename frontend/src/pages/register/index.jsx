@@ -35,7 +35,7 @@ function Register() {
         formDataToSubmit.append('profilePhoto', formData.profilePhoto);
 
         // Example: Sending the form data to an API endpoint
-        fetch('http://localhost/register', {
+        fetch('/register', {
             method: 'POST',
             body: formDataToSubmit
         }).then(response => {

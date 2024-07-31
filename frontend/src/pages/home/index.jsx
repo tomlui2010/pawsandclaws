@@ -9,7 +9,7 @@ export default function Home() {
     async function getUsers() {
       setLoading(true)
       const response = await fetch(
-        `/api/pets`
+        `/pets`
       );
       if (response.ok) { 
         const data = await response.json();
