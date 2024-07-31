@@ -86,14 +86,12 @@ jobs:
             python3 -m venv ~/.venv
             source ~/.venv/bin/activate
             pip install -r backend/requirements.txt
-            sudo su
-            wget -O /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 && chmod +x /usr/local/bin/hadolint
+            sudo wget -O /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 && sudo chmod +x /usr/local/bin/hadolint
       #run lint!
       - run:
           name: run lint
           command: |
             source ~/.venv/bin/activate
-            sudo su
             make lint 
       - run:
           name: Build and push backend app docker image to Docker Hub
