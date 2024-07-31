@@ -23,7 +23,7 @@ COPY backend /app/backend
 ENV PYTHONPATH /app/backend
 
 # Copy source code to working directory
-COPY app.py /app/
+COPY backend/app.py /app/
 
 EXPOSE 5000
 ENV FLASK_APP=app.py
