@@ -25,6 +25,8 @@ ENV PYTHONPATH /app/backend
 # Copy source code to working directory
 COPY backend/app.py /app/
 
+COPY backend/uploads /app/uploads
+
 EXPOSE 5000
 ENV FLASK_APP=app.py
 CMD ["flask", "run", "--host", "0.0.0.0"]

@@ -54,10 +54,17 @@
     tag: latest
     source: pull
 
+- name: Create shared Docker volume
+  docker_volume:
+    name: shared_uploads
+    state: present
+
 - name: Run backend Docker container
   docker_container:
     name: pawsandclaws_backend
     image: tomlui2010/backend-pawsandclaws:latest
+    volumes:
+      - shared_uploads:/app/uploads
     state: started
     ports:
       - "5000:5000"
@@ -66,6 +73,8 @@
   docker_container:
     name: pppcalculator_frontend
     image: tomlui2010/frontend-pawsandclaws:latest
+    volumes:
+      - shared_uploads:/usr/share/nginx/html/uploads
     state: started
     ports:
       - "80:80"
