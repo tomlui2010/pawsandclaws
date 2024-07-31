@@ -1,10 +1,13 @@
-import os
+import os,sys
 from flask import Flask
+# Add the backend/src directory to the Python path
+sys.path.append(os.path.join(os.path.dirname(__file__), 'backend'))
 from src.routes import routes
 from flask_cors import CORS
 from src.models import db
 import logging
 from logging_config import setup_logging
+
 
 # Initialize logging
 setup_logging()
