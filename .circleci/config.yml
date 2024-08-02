@@ -25,7 +25,11 @@ workflows:
     jobs:
       - aws-eks/create-cluster:
           cluster-name: my-eks-demo
+          context:
+            - ppp
       - test-cluster:
           cluster-name: my-eks-demo
           requires:
             - aws-eks/create-cluster
+          context:
+            - ppp
