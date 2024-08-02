@@ -1,35 +1,36 @@
 version: 2.1
-orbs:
-  aws-eks: circleci/aws-eks@2.2.0
-  kubernetes: circleci/kubernetes@1.3
 jobs:
-  test-cluster:
+  create-cluster:
     docker:
-      - image: cimg/python:3.10
-    parameters:
-      cluster-name:
-        description: |
-          Name of the EKS cluster
-        type: string
+      - image: amazon/aws-cli
     steps:
-      - kubernetes/install:
-          kubectl-version: v1.22.0
-      - aws-eks/update-kubeconfig-with-authenticator:
-          cluster-name: << parameters.cluster-name >>
+      - checkout
       - run:
+          name: Install tar and gzip
           command: |
-            kubectl get services
-          name: Test cluster
+            yum update -y
+            yum install -y tar gzip
+            yum install -y jq
+      - run:
+          name: Create backend infrastructure
+          command: |
+             set +e
+             aws cloudformation deploy  \
+              --template-file .circleci/files/backend.yml  \
+              --stack-name "pawsandclaws-backend-${CIRCLE_WORKFLOW_ID:0:7}"  \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
+              --tags project=pawsandclaws
+             DEPLOY_EXIT_CODE=$?
+             if [ $DEPLOY_EXIT_CODE -ne 0 ]; then
+              aws cloudformation describe-stack-events --stack-name "pawsandclaws-backend-${CIRCLE_WORKFLOW_ID:0:7}" >> /tmp/backend-output.txt
+              cat /tmp/backend-output.txt
+              exit 1
+             fi
+             set -e
 workflows:
   deployment:
     jobs:
-      - aws-eks/create-cluster:
+      - create-cluster:
           cluster-name: my-eks-demo
-          context:
-            - ppp
-      - test-cluster:
-          cluster-name: my-eks-demo
-          requires:
-            - aws-eks/create-cluster
           context:
             - ppp
