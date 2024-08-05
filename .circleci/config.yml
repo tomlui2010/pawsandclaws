@@ -20,19 +20,19 @@ jobs:
           name: Create EKS cluster
           command: |
              set +e
-             aws cloudformation deploy  \
-              --template-file .circleci/files/ekscluster.yml  \
-              --stack-name "pawsandclaws-${CIRCLE_WORKFLOW_ID:0:7}"  \
-              --capabilities CAPABILITY_NAMED_IAM \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
-                                   ClusterName=my-eks-cluster\
-                                   VpcId=vpc-019cf5cbe4050e490 \
-                                   SubnetIds=\"subnet-0b568a245265bb23c,subnet-0fbe18a75adbee66d,subnet-03ea30f990d4f0a61,subnet-0098d854d386263fa\" \
-                                   KeyName=pawsandclawskeypair \
-                                   NodeGroupName=my-node-group \
-                                   NodeInstanceType=t2.micro \
-                                   DesiredCapacity=2
-              --tags project=pawsandclaws
+              aws cloudformation deploy \
+                --template-file .circleci/files/ekscluster.yml \
+                --stack-name "pawsandclaws-${CIRCLE_WORKFLOW_ID:0:7}" \
+                --capabilities CAPABILITY_NAMED_IAM \
+                --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
+                                    ClusterName=my-eks-cluster \
+                                    VpcId=vpc-019cf5cbe4050e490 \
+                                    SubnetIds="subnet-0b568a245265bb23c,subnet-0fbe18a75adbee66d,subnet-03ea30f990d4f0a61,subnet-0098d854d386263fa" \
+                                    KeyName=pawsandclawskeypair \
+                                    NodeGroupName=my-node-group \
+                                    NodeInstanceType=t2.micro \
+                                    DesiredCapacity=2 \
+                --tags project=pawsandclaws
              DEPLOY_EXIT_CODE=$?
              if [ $DEPLOY_EXIT_CODE -ne 0 ]; then
               aws cloudformation describe-stack-events --stack-name "pawsandclaws-${CIRCLE_WORKFLOW_ID:0:7}" >> /tmp/output.txt
