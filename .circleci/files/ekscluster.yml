@@ -61,6 +61,7 @@ Resources:
 
   NodeGroup:
     Type: AWS::EKS::Nodegroup
+    DependsOn: VpcConfig
     Properties:
       ClusterName: !Ref ClusterName
       NodegroupName: !Ref NodeGroupName
