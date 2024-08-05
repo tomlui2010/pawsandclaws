@@ -27,7 +27,7 @@ jobs:
                 --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
                                     ClusterName=my-eks-cluster \
                                     VpcId=vpc-019cf5cbe4050e490 \
-                                    SubnetIds="subnet-0b568a245265bb23c,subnet-0fbe18a75adbee66d,subnet-03ea30f990d4f0a61,subnet-0098d854d386263fa" \
+                                    SubnetIds="subnet-0b568a245265bb23c,subnet-0098d854d386263fa" \
                                     KeyName=pawsandclawskeypair \
                                     NodeGroupName=my-node-group \
                                     NodeInstanceType=t2.micro \
