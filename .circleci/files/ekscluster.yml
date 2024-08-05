@@ -58,6 +58,11 @@ Resources:
     Properties:
       GroupDescription: Security group for the EKS cluster
       VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
 
   NodeGroup:
     Type: AWS::EKS::Nodegroup
