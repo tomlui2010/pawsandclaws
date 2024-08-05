@@ -28,7 +28,7 @@ jobs:
                                     ClusterName=my-eks-cluster \
                                     VpcId=vpc-0c3043665f2972014 \
                                     SubnetIds="subnet-0608a757c57724ddd,subnet-0ed864956b5fc0640" \
-                                    KeyName=pawsandclawskeypair \
+                                    KeyName=myEKSWorkerNodeKP \
                                     NodeGroupName=my-node-group \
                                     NodeInstanceType=t2.micro \
                                     DesiredCapacity=2 \
