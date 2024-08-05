@@ -26,8 +26,8 @@ jobs:
               --capabilities CAPABILITY_NAMED_IAM \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
                                    ClusterName=my-eks-cluster\
-                                   VpcId=vpc-0c3043665f2972014 \
-                                   SubnetIds=\"subnet-0608a757c57724ddd,subnet-0ed864956b5fc0640,subnet-0ade8923b68ebd6ea,subnet-0ba81234ba89490e2\" \
+                                   VpcId=vpc-019cf5cbe4050e490 \
+                                   SubnetIds=\"subnet-0b568a245265bb23c,subnet-0fbe18a75adbee66d,subnet-03ea30f990d4f0a61,subnet-0098d854d386263fa\" \
                                    KeyName=pawsandclawskeypair \
                                    NodeGroupName=my-node-group \
                                    NodeInstanceType=t2.micro \
