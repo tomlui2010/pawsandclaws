@@ -18,6 +18,7 @@ jobs:
             yum install -y jq
       - run:
           name: Create EKS cluster
+          no_output_timeout: 59m
           command: |
              set +e
               aws cloudformation deploy \
@@ -26,8 +27,8 @@ jobs:
                 --capabilities CAPABILITY_NAMED_IAM \
                 --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
                                     ClusterName=my-eks-cluster \
-                                    VpcId=vpc-0c3043665f2972014 \
-                                    SubnetIds="subnet-0608a757c57724ddd,subnet-0ed864956b5fc0640" \
+                                    VpcId=vpc-070f89eccca99c55b \
+                                    SubnetIds="subnet-00c2687beae1ff26f,subnet-07273d01b3a444286" \
                                     KeyName=myEKSWorkerNodeKP \
                                     NodeGroupName=my-node-group \
                                     NodeInstanceType=t2.micro \
