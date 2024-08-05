@@ -20,7 +20,7 @@ jobs:
           name: Create EKS cluster
           command: |
              set +e
-             aws cloudformation create-stack  \
+             aws cloudformation deploy  \
               --template-file .circleci/files/ekscluster.yml  \
               --stack-name "pawsandclaws-${CIRCLE_WORKFLOW_ID:0:7}"  \
               --capabilities CAPABILITY_NAMED_IAM \
