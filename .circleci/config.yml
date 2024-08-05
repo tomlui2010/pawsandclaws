@@ -1,4 +1,9 @@
 version: 2.1
+
+Parameters:
+  clustername:
+    Type: String
+    Description: Name of the EKS cluster
 jobs:
   create-cluster:
     docker:
@@ -12,17 +17,25 @@ jobs:
             yum install -y tar gzip
             yum install -y jq
       - run:
-          name: Create backend infrastructure
+          name: Create EKS cluster
           command: |
              set +e
-             aws cloudformation deploy  \
-              --template-file .circleci/files/backend.yml  \
-              --stack-name "pawsandclaws-backend-${CIRCLE_WORKFLOW_ID:0:7}"  \
+             aws cloudformation create-stack  \
+              --template-file .circleci/files/ekscluster.yml  \
+              --stack-name "pawsandclaws-${CIRCLE_WORKFLOW_ID:0:7}"  \
+              --capabilities CAPABILITY_NAMED_IAM \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
+                                   ClusterName=my-eks-cluster\
+                                   VpcId=vpc-0c3043665f2972014 \
+                                   SubnetIds=\"subnet-0608a757c57724ddd,subnet-0ed864956b5fc0640\" \
+                                   KeyName=pawsandclawskeypair \
+                                   NodeGroupName=my-node-group \
+                                   NodeInstanceType=t2.micro \
+                                   DesiredCapacity=2
               --tags project=pawsandclaws
              DEPLOY_EXIT_CODE=$?
              if [ $DEPLOY_EXIT_CODE -ne 0 ]; then
-              aws cloudformation describe-stack-events --stack-name "pawsandclaws-backend-${CIRCLE_WORKFLOW_ID:0:7}" >> /tmp/backend-output.txt
+              aws cloudformation describe-stack-events --stack-name "pawsandclaws-${CIRCLE_WORKFLOW_ID:0:7}" >> /tmp/output.txt
               cat /tmp/backend-output.txt
               exit 1
              fi
@@ -31,6 +44,5 @@ workflows:
   deployment:
     jobs:
       - create-cluster:
-          cluster-name: my-eks-demo
           context:
             - ppp
