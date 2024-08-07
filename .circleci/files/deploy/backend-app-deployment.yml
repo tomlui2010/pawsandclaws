@@ -24,7 +24,7 @@ spec:
             - name: templates-volume
               mountPath: /app/backend/templates
             - name: uploads-volume
-              mountPath: /uploads
+              mountPath: /app/uploads
               
       volumes:
         - name: uploads-volume
