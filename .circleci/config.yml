@@ -23,8 +23,8 @@ jobs:
                 --capabilities CAPABILITY_NAMED_IAM \
                 --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
                                     ClusterName=$EKS_CLUSTER_NAME \
-                                    VpcId=vpc-070f89eccca99c55b \
-                                    SubnetIds="subnet-00c2687beae1ff26f,subnet-07273d01b3a444286" \
+                                    VpcId=vpc-0f7182917b3f1efa8 \
+                                    SubnetIds="subnet-002e1d458df73dd3f,subnet-03d578a6c925dc1f2" \
                                     KeyName=$EKS_WORKER_NODE_KP \
                                     NodeGroupName=$EKS_NODE_GRP_NAME \
                                     NodeInstanceType=t2.micro \
@@ -99,10 +99,15 @@ jobs:
           command: |
             aws eks update-kubeconfig --name $EKS_CLUSTER_NAME
       - run:
+          name: Deploy Database
+          command: |
+            kubectl apply -f .circleci/files/deploy/postgres-deployment.yml
+      - run:
           name: Deploy Flask backend to EKS
           command: |
             kubectl apply -f .circleci/files/deploy/backend-app-deployment.yml
             kubectl apply -f .circleci/files/deploy/backend-app-service.yml
+            kubectl apply -f .circleci/files/deploy/templates-config.yml
       - run:
           name: Deploy React frontend to EKS
           command: |
