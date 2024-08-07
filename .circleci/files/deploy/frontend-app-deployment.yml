@@ -7,6 +7,11 @@ spec:
   selector:
     matchLabels:
       app: frontend-app
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   template:
     metadata:
       labels:
@@ -14,7 +19,7 @@ spec:
     spec:
       containers:
         - name: frontend-app
-          image: tomlui2010/pawsandclaws-frontend-app:latest
+          image: tomlui2010/pawsandclaws-frontend-app:1.0
           ports:
             - containerPort: 80
           volumeMounts:

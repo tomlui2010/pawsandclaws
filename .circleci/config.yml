@@ -66,16 +66,16 @@ jobs:
       - run:
           name: Build and push backend app docker image to Docker Hub
           command: |
-            docker build -f backend/Dockerfile.backend -t tomlui2010/$IMAGE_NAME-backend-app:latest .
+            docker build -f backend/Dockerfile.backend -t tomlui2010/$IMAGE_NAME-backend-app:1.0 .
             echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USER_ID" --password-stdin
-            docker push tomlui2010/$IMAGE_NAME-backend-app:latest
+            docker push tomlui2010/$IMAGE_NAME-backend-app:1.0
 
       - run:
           name: Build and push frontend app docker image to Docker Hub
           command: |
-            docker build -f frontend/Dockerfile.frontend -t tomlui2010/$IMAGE_NAME-frontend-app:latest .
+            docker build -f frontend/Dockerfile.frontend -t tomlui2010/$IMAGE_NAME-frontend-app:1.0 .
             echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USER_ID" --password-stdin
-            docker push tomlui2010/$IMAGE_NAME-frontend-app:latest
+            docker push tomlui2010/$IMAGE_NAME-frontend-app:1.0
       - save_cache:
           paths: 
             - ~/.venv
@@ -98,6 +98,9 @@ jobs:
           name: Install awscli and configure kubectl
           command: |
             pip install awscli
+            aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+            aws configure set region $AWS_REGION 
             aws eks update-kubeconfig --name $EKS_CLUSTER_NAME
       - run:
           name: Deploy Database
