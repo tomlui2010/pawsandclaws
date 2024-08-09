@@ -122,15 +122,15 @@ jobs:
 workflows:
   deployment:
     jobs:
-      - create-cluster:
-          context:
-            - ppp
+      # - create-cluster:
+      #     context:
+      #       - ppp
       - build-and-push:
           context:
            - ppp
       - deploy:
           requires:
             - build-and-push
-            - create-cluster
+            # - create-cluster
           context:
            - ppp
