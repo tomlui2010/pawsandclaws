@@ -33,7 +33,7 @@ Resources:
     Type: AWS::EKS::Cluster
     Properties:
       Name: !Ref ClusterName
-      RoleArn: arn:aws:iam::871961862715:role/myeksclustercreaterole
+      RoleArn: arn:aws:iam::615831895014:role/myeksclustercreaterole
       ResourcesVpcConfig:
         SecurityGroupIds:
           - !Ref ClusterSecurityGroup
@@ -105,7 +105,7 @@ Resources:
     Properties:
       ClusterName: !Ref ClusterName
       NodegroupName: !Ref NodeGroupName
-      NodeRole: arn:aws:iam::871961862715:role/myeksnoderole
+      NodeRole: arn:aws:iam::615831895014:role/myeksclusternoderole
       Subnets: !Ref SubnetIds
       ScalingConfig:
         DesiredSize: !Ref DesiredCapacity
