@@ -105,6 +105,3 @@ Outputs:
   NodeGroupNameOutput:
     Description: Name of the EKS node group
     Value: !Ref NodeGroupName
-  EKSClusterUserOutput:
-    Description: IAM User with permissions to manage EKS cluster
-    Value: !Ref EKSClusterUser
