@@ -52,7 +52,7 @@ Resources:
           Action: sts:AssumeRole
         - Effect: Allow
           Principal:
-            AWS: arn:aws:iam::167411033604:user/myeksdeployuser
+            AWS: arn:aws:iam::043505326524:user/myawseksuserforcloud
           Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
@@ -67,6 +67,10 @@ Resources:
           FromPort: 443
           ToPort: 443
           CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0  
 
   NodeInstanceRole:
     Type: AWS::IAM::Role
@@ -81,7 +85,7 @@ Resources:
           Action: sts:AssumeRole
         - Effect: Allow
           Principal:
-            AWS: arn:aws:iam::167411033604:user/myeksdeployuser
+            AWS: arn:aws:iam::043505326524:user/myawseksuserforcloud
           Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
