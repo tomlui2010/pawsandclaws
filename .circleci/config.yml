@@ -12,6 +12,7 @@ jobs:
             yum update -y
             yum install -y tar gzip
             yum install -y jq
+      - run: aws sts get-caller-identity
       - run:
           name: Create EKS cluster
           no_output_timeout: 59m
@@ -23,8 +24,8 @@ jobs:
                 --capabilities CAPABILITY_NAMED_IAM \
                 --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
                                     ClusterName=$EKS_CLUSTER_NAME \
-                                    VpcId=vpc-09e721a6e2ad6c0b3 \
-                                    SubnetIds="subnet-025ec0eef41286ce6,subnet-0fa35394f694fea7c" \
+                                    VpcId=vpc-04750487f65f87229 \
+                                    SubnetIds="subnet-025ce0241d0cec72a,subnet-096dc8da8cf1c1548" \
                                     KeyName=$EKS_WORKER_NODE_KP \
                                     NodeGroupName=$EKS_NODE_GRP_NAME \
                                     NodeInstanceType=t2.micro \

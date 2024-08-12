@@ -50,10 +50,6 @@ Resources:
           Principal:
             Service: eks.amazonaws.com
           Action: sts:AssumeRole
-        - Effect: Allow
-          Principal:
-            AWS: arn:aws:sts::615831895014:assumed-role/voclabs/user2413920=6107439961
-          Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
                 
@@ -82,10 +78,6 @@ Resources:
         - Effect: Allow
           Principal:
             Service: ec2.amazonaws.com
-          Action: sts:AssumeRole
-        - Effect: Allow
-          Principal:
-            AWS: arn:aws:sts::615831895014:assumed-role/voclabs/user2413920=6107439961
           Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
