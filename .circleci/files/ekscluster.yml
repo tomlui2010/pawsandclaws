@@ -52,7 +52,7 @@ Resources:
           Action: sts:AssumeRole
         - Effect: Allow
           Principal:
-            AWS: arn:aws:iam::043505326524:user/myawseksuserforcloud
+            AWS: arn:aws:iam::167411033604:user/myawseksuserforcloud
           Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
@@ -85,7 +85,7 @@ Resources:
           Action: sts:AssumeRole
         - Effect: Allow
           Principal:
-            AWS: arn:aws:iam::043505326524:user/myawseksuserforcloud
+            AWS: arn:aws:iam::167411033604:user/myawseksuserforcloud
           Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
