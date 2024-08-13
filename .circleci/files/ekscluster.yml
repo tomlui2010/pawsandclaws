@@ -38,6 +38,8 @@ Resources:
         SecurityGroupIds:
           - !Ref ClusterSecurityGroup
         SubnetIds: !Ref SubnetIds
+      KubernetesNetworkConfig:
+        ApiServerAccessMode: 'API_AND_CONFIG_MAP'
 
   EKSClusterRole:
     Type: AWS::IAM::Role
@@ -52,6 +54,7 @@ Resources:
           Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+        - arn:aws:iam::aws:policy/AmazonEKSServicePolicy
                 
   ClusterSecurityGroup:
     Type: AWS::EC2::SecurityGroup

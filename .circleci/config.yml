@@ -12,7 +12,7 @@ jobs:
             yum update -y
             yum install -y tar gzip
             yum install -y jq
-      - run: aws sts get-caller-identity
+      - run: aws sts get-caller-identity --profile=default
       - run:
           name: Create EKS cluster
           no_output_timeout: 59m
@@ -24,8 +24,8 @@ jobs:
                 --capabilities CAPABILITY_NAMED_IAM \
                 --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
                                     ClusterName=$EKS_CLUSTER_NAME \
-                                    VpcId=vpc-04750487f65f87229 \
-                                    SubnetIds="subnet-025ce0241d0cec72a,subnet-096dc8da8cf1c1548" \
+                                    VpcId=vpc-0f13602ce3c4a5b3c \
+                                    SubnetIds="subnet-06f8f2bd9d4641846,subnet-066e753daca7efa92,subnet-016b6fb3466ad0606,subnet-05633714a5cb55bee" \
                                     KeyName=$EKS_WORKER_NODE_KP \
                                     NodeGroupName=$EKS_NODE_GRP_NAME \
                                     NodeInstanceType=t2.micro \
@@ -100,6 +100,7 @@ jobs:
             aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
             aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
             aws configure set region $AWS_REGION 
+            aws sts get-caller-identity
             aws eks update-kubeconfig --name $EKS_CLUSTER_NAME
       - run:
           name: Deploy Database
@@ -121,15 +122,15 @@ jobs:
 workflows:
   deployment:
     jobs:
-      - create-cluster:
-          context:
-            - ppp
+      # - create-cluster:
+      #     context:
+      #       - ppp
       - build-and-push:
           context:
            - ppp
       - deploy:
           requires:
             - build-and-push
-            - create-cluster
+            # - create-cluster
           context:
            - ppp
