@@ -20,16 +20,16 @@ Parameters:
   NodeInstanceType:
     Type: String
     Description: EC2 instance type for the worker nodes
-    Default: t3.micro
+    Default: t3.medium
   DesiredCapacity:
     Type: Number
     Description: Desired number of worker nodes
-    Default: 2
-    MinValue: 1
+    Default: 4
+    MinValue: 4
     MaxValue: 10
 
 Resources:
-  VpcConfig:
+  EKSCluster:
     Type: AWS::EKS::Cluster
     Properties:
       Name: !Ref ClusterName
@@ -38,6 +38,8 @@ Resources:
         SecurityGroupIds:
           - !Ref ClusterSecurityGroup
         SubnetIds: !Ref SubnetIds
+      EndpointPublicAccess: true  # Enables public access to the Kubernetes API server endpoint
+      EndpointPrivateAccess: false # Disables private access to the Kubernetes API server endpoint
       KubernetesNetworkConfig:
         ApiServerAccessMode: 'API_AND_CONFIG_MAP'
 
@@ -86,10 +88,12 @@ Resources:
         - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
         - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
         - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+        - arn:aws:iam::aws:policy/AmazonEMRReadOnlyAccessPolicy_v2
+        - arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy
         
   NodeGroup:
     Type: AWS::EKS::Nodegroup
-    DependsOn: VpcConfig
+    DependsOn: EKSCluster
     Properties:
       ClusterName: !Ref ClusterName
       NodegroupName: !Ref NodeGroupName
@@ -97,10 +101,11 @@ Resources:
       Subnets: !Ref SubnetIds
       ScalingConfig:
         DesiredSize: !Ref DesiredCapacity
-        MinSize: 1
-        MaxSize: 10
+        MinSize: 6
+        MaxSize: 12
       InstanceTypes:
         - !Ref NodeInstanceType
+      DiskSize: 20 #in GiB
 
 
 Outputs:

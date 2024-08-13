@@ -15,6 +15,7 @@ spec:
       containers:
         - name: postgres
           image: postgres:latest
+          imagePullPolicy: "IfNotPresent"
           ports:
             - containerPort: 5432
           env:
@@ -25,10 +26,10 @@ spec:
             - name: POSTGRES_PASSWORD
               value: postgres
           volumeMounts:
-            - name: postgres-storage
+            - name: postgresdb
               mountPath: /var/lib/postgresql/data
       volumes:
-        - name: postgres-storage
+        - name: postgresdb
           persistentVolumeClaim:
             claimName: postgres-pvc
 
@@ -46,12 +47,25 @@ spec:
 
 ---
 apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-pv
+spec:
+  capacity:
+    storage: 256Mi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/mnt/data"
+
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: postgres-pvc
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
-      storage: 100Mi
+      storage: 256Mi

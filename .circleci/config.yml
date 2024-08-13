@@ -28,8 +28,8 @@ jobs:
                                     SubnetIds="subnet-06f8f2bd9d4641846,subnet-066e753daca7efa92,subnet-016b6fb3466ad0606,subnet-05633714a5cb55bee" \
                                     KeyName=$EKS_WORKER_NODE_KP \
                                     NodeGroupName=$EKS_NODE_GRP_NAME \
-                                    NodeInstanceType=t2.micro \
-                                    DesiredCapacity=2 \
+                                    NodeInstanceType=t3.medium \
+                                    DesiredCapacity=5 \
                 --tags project=pawsandclaws
              DEPLOY_EXIT_CODE=$?
              if [ $DEPLOY_EXIT_CODE -ne 0 ]; then
