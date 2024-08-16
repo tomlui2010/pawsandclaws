@@ -22,18 +22,6 @@ spec:
         image: tomlui2010/pawsandclaws-backend-app:1.0
         ports:
           - containerPort: 5000
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 5000
-          initialDelaySeconds: 5
-          timeoutSeconds: 2
-        readinessProbe:
-          httpGet:
-            path: "/"
-            port: 5000
-          initialDelaySeconds: 5
-          timeoutSeconds: 5
         env:
           - name: DATABASE
             value: postgres
