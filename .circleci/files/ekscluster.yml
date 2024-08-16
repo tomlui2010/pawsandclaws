@@ -38,10 +38,6 @@ Resources:
         SecurityGroupIds:
           - !Ref ClusterSecurityGroup
         SubnetIds: !Ref SubnetIds
-      EndpointPublicAccess: true  # Enables public access to the Kubernetes API server endpoint
-      EndpointPrivateAccess: false # Disables private access to the Kubernetes API server endpoint
-      KubernetesNetworkConfig:
-        ApiServerAccessMode: 'API_AND_CONFIG_MAP'
 
   EKSClusterRole:
     Type: AWS::IAM::Role
