@@ -17,7 +17,10 @@ _Description: Paws & Claws is a webapp designed to be a simple marketplace for p
  - Pipeline is fully automated using CICD tool CircleCI. 
 
 ## Kubernetes Cluster (AWS EKS) deployed
-![CICD Project](https://raw.githubusercontent.com/tomlui2010/pawsandclaws/witheks/Screenshots/PawsandClaws_Infrastructure.png)
+![Kubernetes Cluster on AWS EKS](https://raw.githubusercontent.com/tomlui2010/pawsandclaws/witheks/Screenshots/PawsandClaws_Infrastructure.png)
+
+## CircleCI CICD
+![CICD](CircleCI_CICD.jpg)
 
 ## Screenshots
 [Screenshots](https://github.com/tomlui2010/pawsandclaws/tree/witheks/Screenshots)
