@@ -24,8 +24,8 @@ jobs:
                 --capabilities CAPABILITY_NAMED_IAM \
                 --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
                                     ClusterName=$EKS_CLUSTER_NAME \
-                                    VpcId=vpc-0f13602ce3c4a5b3c \
-                                    SubnetIds="subnet-06f8f2bd9d4641846,subnet-066e753daca7efa92,subnet-016b6fb3466ad0606,subnet-05633714a5cb55bee" \
+                                    VpcId=vpc-048e43f4a00618318 \
+                                    SubnetIds="subnet-0f5baae485b02bafc,subnet-0f0ef1ade0301e754,subnet-0f38d493b66b0cd52,subnet-0ae1cf444a5ccbebe" \
                                     KeyName=$EKS_WORKER_NODE_KP \
                                     NodeGroupName=$EKS_NODE_GRP_NAME \
                                     NodeInstanceType=t3.medium \
@@ -101,7 +101,7 @@ jobs:
             aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
             aws configure set region $AWS_REGION 
             aws sts get-caller-identity
-            aws eks update-kubeconfig --name $EKS_CLUSTER_NAME
+            aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
       - run:
           name: Deploy Database
           command: |
