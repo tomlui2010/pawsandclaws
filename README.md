@@ -19,6 +19,7 @@ _Description: Paws & Claws is a webapp designed to be a simple marketplace for p
 ## Kubernetes Cluster (AWS EKS) deployed
 ![CICD Project](https://raw.githubusercontent.com/tomlui2010/pawsandclaws/witheks/Screenshots/PawsandClaws_Infrastructure.png)
 
+## Screenshots
 [Screenshots](https://github.com/tomlui2010/pawsandclaws/tree/witheks/Screenshots)
 
 ## App Demo
