@@ -24,9 +24,9 @@ Parameters:
   DesiredCapacity:
     Type: Number
     Description: Desired number of worker nodes
-    Default: 4
-    MinValue: 4
-    MaxValue: 10
+    Default: 6
+    MinValue: 6
+    MaxValue: 12
 
 Resources:
   EKSCluster:

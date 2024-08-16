@@ -29,7 +29,7 @@ jobs:
                                     KeyName=$EKS_WORKER_NODE_KP \
                                     NodeGroupName=$EKS_NODE_GRP_NAME \
                                     NodeInstanceType=t3.medium \
-                                    DesiredCapacity=5 \
+                                    DesiredCapacity=6 \
                 --tags project=pawsandclaws
              DEPLOY_EXIT_CODE=$?
              if [ $DEPLOY_EXIT_CODE -ne 0 ]; then
