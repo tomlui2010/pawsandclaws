@@ -12,7 +12,7 @@ jobs:
             yum update -y
             yum install -y tar gzip
             yum install -y jq
-      - run: aws sts get-caller-identity --profile=default
+      - run: aws sts get-caller-identity
       - run:
           name: Create EKS cluster
           no_output_timeout: 59m
