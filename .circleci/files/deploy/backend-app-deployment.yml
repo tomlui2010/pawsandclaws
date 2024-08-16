@@ -18,18 +18,31 @@ spec:
         app: backend-app
     spec:
       containers:
-        - name: backend-app
-          image: tomlui2010/pawsandclaws-backend-app:1.0
-          ports:
-            - containerPort: 5000
-          env:
-            - name: DATABASE
-              value: postgres
-          volumeMounts:
-            - name: templates-volume
-              mountPath: /app/backend/templates
-            - name: uploads-volume
-              mountPath: /app/uploads
+      - name: backend-app
+        image: tomlui2010/pawsandclaws-backend-app:1.0
+        ports:
+          - containerPort: 5000
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 5
+          timeoutSeconds: 2
+        readinessProbe:
+          httpGet:
+            path: "/"
+            port: 5000
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+        env:
+          - name: DATABASE
+            value: postgres
+        volumeMounts:
+          - name: templates-volume
+            mountPath: /app/backend/templates
+          - name: uploads-volume
+            mountPath: /app/uploads
+      restartPolicy: Always
               
       volumes:
         - name: uploads-volume
