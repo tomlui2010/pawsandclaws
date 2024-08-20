@@ -84,7 +84,7 @@ jobs:
           docker push ${{ vars.DOCKER_HUB_USER }}/${{ vars.IMAGE_NAME }}-frontend-app:1.0.0
   
   terraform-EKS-infra-setup:
-    name: Create EKS Cluster using Terraform
+    name: terraform-EKS-infra-setup
     runs-on: ubuntu-latest
 
     steps:
@@ -133,11 +133,16 @@ jobs:
         with:
           version: v1.29.0
 
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
       - name: Generate Kubeconfig
         run: |
-          aws eks update-kubeconfig \
-            --region ${{ vars.AWS_REGION }} \
-            --name ${{ needs.terraform.outputs.eks_cluster_name }}
+          aws eks update-kubeconfig --region ${{ vars.AWS_REGION }} --name ${{ needs.terraform-EKS-infra-setup.outputs.eks_cluster_name }}
       
       - name: Deploy Postgres
         run: |
