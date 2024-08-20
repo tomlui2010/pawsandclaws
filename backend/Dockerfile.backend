@@ -24,7 +24,6 @@ ENV PYTHONPATH /app/backend
 
 # Copy source code to working directory
 COPY backend/app.py /app/
-COPY backend/uploads /app/uploads
 
 COPY backend/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
