@@ -69,7 +69,7 @@ jobs:
       - name: Run lint
         run: |
           cd frontend && npm run lint
-          make lint
+          cd frontend && make lint
         continue-on-error: true
       
       - name: Build the frontend image
