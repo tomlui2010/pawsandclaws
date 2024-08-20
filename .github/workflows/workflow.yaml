@@ -38,12 +38,12 @@ jobs:
       
       - name: Build the backend image
         run: |
-          docker build -f backend/Dockerfile.backend -t ${{ vars.DOCKER_HUB_USER }}/${{ vars.IMAGE_NAME }}-backend-app:1.0.0 .
+          docker build -f backend/Dockerfile.backend -t ${{ vars.IMAGE_NAME }}-backend-app:1.0.0 .
 
       - name: Push docker image to Dockerhub
         run: | 
           docker login -u ${{ vars.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_TOKEN }}
-          docker push ${{ vars.DOCKER_HUB_USER }}/${{ vars.IMAGE_NAME }}-backend-app:1.0.0
+          docker push ${{ vars.IMAGE_NAME }}-backend-app:1.0.0
 
   # build-frontend:
     
