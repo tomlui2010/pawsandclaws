@@ -114,4 +114,4 @@ jobs:
       continue-on-error: true
 
     - name: Terraform Apply
-      run: terraform apply -auto-approve
+      run: cd terraform && terraform apply -auto-approve
