@@ -23,12 +23,12 @@ jobs:
            pip install -r backend/requirements.txt
            sudo wget -O /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 && sudo chmod +x /usr/local/bin/hadolint
       
-      - name: Lint with Ruff
-        run: |
-           pip install ruff
-           cd backend 
-           ruff check --output-format=github .
-        continue-on-error: true
+      # - name: Lint with Ruff
+      #   run: |
+      #      pip install ruff
+      #      cd backend 
+      #      ruff check --output-format=github .
+      #   continue-on-error: true
 
       - name: Run lint
         run: |
@@ -38,12 +38,12 @@ jobs:
       
       - name: Build the backend image
         run: |
-          docker build -f backend/Dockerfile.backend -t ${{vars.DOCKER_HUB_USER}}/${{vars.IMAGE_NAME}}-backend-app:1.0.0 .
+          docker build -f backend/Dockerfile.backend -t $DOCKER_HUB_USER/$IMAGE_NAME-backend-app:1.0.0 .
 
       - name: Push docker image to Dockerhub
         run: | 
-          docker login -u ${{vars.DOCKER_HUB_USER}} -p ${{secrets.DOCKER_HUB_TOKEN}}
-          docker push ${{vars.DOCKER_HUB_USER}}/${{vars.IMAGE_NAME}}-backend-app:1.0.0
+          docker login -u $DOCKER_HUB_USER -p ${{secrets.DOCKER_HUB_TOKEN}}
+          docker push $DOCKER_HUB_USER/$IMAGE_NAME-backend-app:1.0.0
 
   # build-frontend:
     
