@@ -45,35 +45,35 @@ jobs:
           docker login -u ${{ vars.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_TOKEN }}
           docker push ${{ vars.DOCKER_HUB_USER }}/${{ vars.IMAGE_NAME }}-backend-app:1.0.0
 
-  # build-frontend:
-    
-  #   runs-on: ubuntu-latest
+  build-frontend:    
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install the dependencies.
+        run: |
+          cd frontend && npm ci
+          sudo wget -O /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 && sudo chmod +x /usr/local/bin/hadolint
 
 
-  #   steps:
+      - name: Run lint
+        run: |
+          cd frontend && npm run lint
+          make lint
+        continue-on-error: true
+      
+      - name: Build the frontend image
+        run: |
+          docker build -f frontend/Dockerfile.frontend -t ${{ vars.DOCKER_HUB_USER }}/${{ vars.IMAGE_NAME }}-frontend-app:1.0.0 .
 
-  #     - uses: actions/checkout@v4
-
-  #     - name: Use Node.js ${{ matrix.node-version }}
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version: ${{ matrix.node-version }}
-
-  #     # Install the dependencies.
-  #     - run: |
-  #         cd github-actions-demo/backend && npm ci
-
-  #     # Run the tests.
-  #     - run: |
-  #         cd github-actions-demo/backend && npm run test
-
-  #     # Run the linter.
-  #     - run: |
-  #         cd github-actions-demo/backend && npm run lint
-
-  #     # Send a console message at completion.
-  #     - run: |
-  #         echo "Hello ${{github.actor}}. You pushed to ${{github.repository}} at $(date)."
+      - name: Push docker image to Dockerhub
+        run: | 
+          docker login -u ${{ vars.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_TOKEN }}
+          docker push ${{ vars.DOCKER_HUB_USER }}/${{ vars.IMAGE_NAME }}-frontend-app:1.0.0
   
   # # terraform:
   #   name: Create EKS Cluster using Terraform
