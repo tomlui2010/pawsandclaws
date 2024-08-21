@@ -25,6 +25,9 @@ spec:
         env:
           - name: DATABASE
             value: postgres
+        envFrom:
+          - configMapRef:
+            name: templates-config
         volumeMounts:
           - name: templates-volume
             mountPath: /app/backend/templates
