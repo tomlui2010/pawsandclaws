@@ -55,6 +55,8 @@ spec:
     storage: 256Mi
   accessModes:
     - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: gp2
   hostPath:
     path: "/mnt/data"
 
@@ -64,6 +66,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: postgres-pvc
 spec:
+  storageClassName: gp2
   accessModes:
     - ReadWriteMany
   resources:
