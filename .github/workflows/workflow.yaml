@@ -144,7 +144,9 @@ jobs:
 
       - name: Generate Kubeconfig
         run: |
-          aws eks update-kubeconfig --region ${{ vars.AWS_REGION }} --name ${{ vars.CLUSTER_NAME }}
+          CLUSTER_NAME=$(aws eks list-clusters --region ${{ vars.AWS_REGION }} --query "clusters[0]" --output text)
+          echo "Cluster Name: $CLUSTER_NAME"
+          aws eks update-kubeconfig --region ${{ vars.AWS_REGION }} --name $CLUSTER_NAME
       
       - name: Deploy Postgres
         run: |
