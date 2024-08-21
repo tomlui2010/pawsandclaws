@@ -120,7 +120,9 @@ jobs:
     
     - name: Get Cluster Name
       id: get_cluster_name
-      run: echo "eks_cluster_name=$(terraform output -raw eks_cluster_name)" >> "$GITHUB_OUTPUT"
+      run: |
+        cluster_name=$(terraform output -raw eks_cluster_name | tr -d '\n\r')
+        echo "eks_cluster_name=$cluster_name" >> "$GITHUB_OUTPUT"
 
   deploy:
     name: Setup Kubeconfig
@@ -168,6 +170,9 @@ jobs:
     name: Destroy Infrastructure on Failure
     runs-on: ubuntu-latest
     if: failure()
+    needs: 
+      - terraform-EKS-infra-setup
+      - deploy
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
