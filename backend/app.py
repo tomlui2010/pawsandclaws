@@ -13,7 +13,7 @@ from logging_config import setup_logging
 setup_logging()
 logger = logging.getLogger(__name__)
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='/app/backend/templates')
 CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@postgres/pets'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
