@@ -6,7 +6,7 @@ on:
 
 jobs:
   build-backend:    
-    name: Build Backend App
+    name: build-backend
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -47,7 +47,7 @@ jobs:
           docker push ${{ vars.DOCKER_HUB_USER }}/${{ vars.IMAGE_NAME }}-backend-app:1.0.0
 
   build-frontend:    
-    name: Build Frontend App
+    name: build-frontend
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -121,7 +121,6 @@ jobs:
       with:
         name: terraform-state
         path: terraform/terraform.tfstate
-    
 
   deploy:
     name: deploy
@@ -164,7 +163,7 @@ jobs:
           kubectl apply -f .github/files/deploy/nginx-configmap.yml
 
   cleanup:
-    name: Destroy Infrastructure on Failure
+    name: cleanup
     runs-on: ubuntu-latest
     if: failure()
     needs: 
