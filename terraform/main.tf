@@ -15,7 +15,7 @@ data "aws_availability_zones" "available" {
 }
 
 locals {
-  cluster_name = "pawsandclaws-eks-${random_string.suffix.result}"
+  cluster_name = "pawsandclaws"
 }
 
 resource "random_string" "suffix" {
